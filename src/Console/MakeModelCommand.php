@@ -3,7 +3,12 @@
 namespace SiegeLi\Console;
 
 // Laravel
+use Str;
+use File;
 use Illuminate\Console\Command;
+
+// SiegeLI
+use SiegeLi\Helpers\Stub;
 
 class MakeModelCommand extends Command
 {
@@ -12,7 +17,7 @@ class MakeModelCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'siege:m';
+    protected $signature = 'siege:m {model}';
 
     /**
      * The console command description.
@@ -38,6 +43,35 @@ class MakeModelCommand extends Command
      */
     public function handle()
     {
-        echo('testing');
+
+        // Get the path and contents.
+        $path = app_path() . '/' . Stub::stubName($this->argument('model'));
+        $model = Stub::get('model')->make($this->getOptions());
+
+        // Make the file
+        file_put_contents($path, $model);
+
+        $this->info('Model made.');
     }
+
+
+    /**
+    * Assembles all arguments passed by user input
+    *
+    * @param void
+    *
+    * @return array | options
+    *
+    * @author Spencer Jones
+    **/
+    protected function getOptions() {
+
+
+        return [
+            'name' => $this->argument('model'),
+        ];
+    
+    }
+        
+
 }
