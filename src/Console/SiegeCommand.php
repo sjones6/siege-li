@@ -10,6 +10,7 @@ use Illuminate\Console\AppNamespaceDetectorTrait;
 class SiegeCommand extends Command
 {
 
+    use AppNamespaceDetectorTrait;
 
     /**
      * Create a new command instance.
