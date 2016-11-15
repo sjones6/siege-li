@@ -2,8 +2,8 @@
 
 namespace SiegeLi\Console;
 
-// Laravel
-use Illuminate\Console\Command;
+// Siege
+use SiegeLi\Console\SiegeCommand as Command;
 
 class MakeViewsCommand extends Command
 {

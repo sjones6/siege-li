@@ -4,14 +4,13 @@ namespace SiegeLi\Console;
 
 // Laravel
 use Str;
-use File;
-use Illuminate\Console\Command;
 
-// SiegeLI
-use SiegeLi\Helpers\Stub;
+// Siege
+use SiegeLi\Console\SiegeCommand as Command;
 
 class MakeModelCommand extends Command
 {
+
     /**
      * The name and signature of the console command.
      *
@@ -66,9 +65,11 @@ class MakeModelCommand extends Command
     **/
     protected function getOptions() {
 
-
         return [
-            'name' => $this->argument('model'),
+            'namespace' => Str::studly($this->appNamespace()),
+            'name' => Str::studly($this->argument('model')),
+            'table' => Str::snake($this->argument('model')),
+            'primary_key' => Str::snake($this->argument('model')) . '_id',
         ];
     
     }

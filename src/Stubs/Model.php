@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace {{namespace}};
 
 // Framework
 use Illuminate\Database\Eloquent\Model;
@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 // Application
 
-class User extends Model
+class {{model}} extends Model
 {
 
   use SoftDeletes;
@@ -18,6 +18,16 @@ class User extends Model
   /**
   * @var string | table name
   **/
-  protected $table = {{table}};
+  protected $table = "{{table}}";
+
+  /**
+  * @var string | guarded attributes
+  **/
+  protected $guarded = [];
+
+  /**
+  * @var string | column name of primary key attribute
+  **/
+  protected $primaryKey = "{{primary_key}}";
 
 }
