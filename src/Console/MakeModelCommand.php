@@ -3,7 +3,7 @@
 namespace SiegeLi\Console;
 
 // Laravel
-use Str;
+use Illuminate\Support\Str;
 
 // Siege
 use SiegeLi\Helpers\Stub;
@@ -67,8 +67,8 @@ class MakeModelCommand extends Command
     protected function getOptions() {
 
         return [
-            'namespace' => Str::studly($this->appNamespace()),
-            'name' => Str::studly($this->argument('model')),
+            'namespace' => strstr(Str::studly($this->appNamespace()), '/'),
+            'model' => Str::studly($this->argument('model')),
             'table' => Str::snake($this->argument('model')),
             'primary_key' => Str::snake($this->argument('model')) . '_id',
         ];
