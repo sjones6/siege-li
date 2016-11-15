@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Console\Commands;
+namespace SiegeLi\Console;
 
+// Laravel
 use Illuminate\Console\Command;
 
 class MakeControllerCommand extends Command
