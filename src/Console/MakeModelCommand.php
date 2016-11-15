@@ -67,7 +67,7 @@ class MakeModelCommand extends Command
     protected function getOptions() {
 
         return [
-            'namespace' => preg_replace('/\//', '', Str::studly($this->appNamespace())),
+            'namespace' => preg_replace('/\\\//', '', Str::studly($this->appNamespace())),
             'model' => Str::studly($this->argument('model')),
             'table' => Str::snake($this->argument('model')),
             'primary_key' => Str::snake($this->argument('model')) . '_id',
