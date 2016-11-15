@@ -6,6 +6,7 @@ namespace SiegeLi\Console;
 use Str;
 
 // Siege
+use SiegeLi\Helpers\Stub;
 use SiegeLi\Console\SiegeCommand as Command;
 
 class MakeModelCommand extends Command
