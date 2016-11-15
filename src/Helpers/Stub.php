@@ -268,7 +268,7 @@ class Stub
 	*
 	* @author Spencer Jones
 	**/
-	public function stubName($name = '')
+	public static function stubName($name = '')
 	{
 
 		// Convert to studly case
