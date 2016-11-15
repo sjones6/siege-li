@@ -1,6 +1,7 @@
 {
 	"name": "sjones6/siege-li",
 	"description": "A HIHGLY opinionated and personalized Laravel CLI tool",
+	"type": "library",
 	"require": {
 		"php": ">=5.5.9",
         "laravel/framework": "5.3.*"
