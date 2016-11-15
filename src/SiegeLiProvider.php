@@ -2,10 +2,15 @@
 
 namespace SiegeLi;
 
+// Laravel
 use Illuminate\Support\ServiceProvider;
+
+// Package
+use SiegeLi\Console\MakeModelCommand;
 
 class SiegeLiProvider extends ServiceProvider
 {
+
     /**
      * Bootstrap the package services.
      *
@@ -13,7 +18,14 @@ class SiegeLiProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                MakeModelCommand::class
+            ]);
+        }
+
     }
 
     /**
