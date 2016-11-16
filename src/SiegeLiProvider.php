@@ -8,6 +8,7 @@ use Illuminate\Support\ServiceProvider;
 // Package
 use SiegeLi\Console\MakeModelCommand;
 use SiegeLi\Console\MakeControllerCommand;
+use SiegeLi\Console\MvcCommand;
 
 class SiegeLiProvider extends ServiceProvider
 {
@@ -23,7 +24,8 @@ class SiegeLiProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 MakeModelCommand::class,
-                MakeControllerCommand::class
+                MakeControllerCommand::class,
+                MvcCommand::class,
             ]);
         }
 

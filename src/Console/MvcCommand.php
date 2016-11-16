@@ -2,24 +2,29 @@
 
 namespace SiegeLi\Console;
 
+// Laravel
+use Illuminate\Support\Str;
+use Illuminate\Support\Collection;
+
 // Siege
 use SiegeLi\Console\SiegeCommand as Command;
 
-class McvCommand extends Command
+
+class MvcCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'command:name';
+    protected $signature = 'siege:mvc {resource}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Makes model, view, controller, routes for resource';
 
     /**
      * Create a new command instance.
@@ -38,6 +43,33 @@ class McvCommand extends Command
      */
     public function handle()
     {
-        //
+        // Make controller
+        $this->call('siege:c', [
+            'resource' => $this->resource(),
+            '-a',
+        ]);
+
+        // Make the model
+        $this->call('siege:m', [
+            'model' => $this->resource(),
+            '-a',
+        ]);
+
     }
+
+    /**
+    * Description
+    *
+    * @param
+    *
+    * @return
+    *
+    * @author Spencer Jones
+    **/
+    protected function resource() {
+    
+        return $this->argument('resource');
+
+    }
+        
 }
