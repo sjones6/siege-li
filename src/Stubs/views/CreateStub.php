@@ -6,8 +6,9 @@
 		<div class="row">
 			<div class="col-lg-12">
 				<form method="POST" action="{{ route('{{model_slug}}.store', ['{{model_slug}}' => ${{model_camel}}->getKey()]) }}">
-					{{ csrf_token() }}
+					
 
+					{{ csrf_field() }}
 					<button type="submit" class="btn btn-primary">Submit</button>
 
 				</form>
