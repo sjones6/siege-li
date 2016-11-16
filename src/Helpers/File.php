@@ -9,6 +9,17 @@ class File
 {
 
 
+	public static function get($path)
+	{
+
+		if (!self::alreadyExists($path)) {
+			throw new \Exception('File ' . $path . ' cannot be found');
+		}
+
+		return Storage::get($path);
+
+	}
+
 	public static function put($path, $contents)
 	{
 
@@ -16,8 +27,20 @@ class File
 			throw new \Exception('File ' . $path . ' already exists');
 		}
 
-		Storage::put($path, $contents);
+		self::makeDirsAndPut($path, $contents);
 
+	}
+
+	protected static function makeDirsAndPut($path, $contents) 
+	{
+
+		$dirPath = substr($path, 0, strrpos($path, '/'));
+
+		if (!Storage::exists($dirPath)) {
+			Storage::makeDirectory($dirPath);
+		}
+
+		Storage::put($path, $contents);
 	}
 
 
