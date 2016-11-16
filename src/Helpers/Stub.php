@@ -5,6 +5,7 @@ namespace SiegeLi\Helpers;
 // Laravel
 use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\File as Storage;
 
 class Stub
 {
@@ -28,25 +29,10 @@ class Stub
 	public function __construct()
 	{
 
-		$this->stubs = new Collection(scandir($this->stubPath()));
+		$this->stubs = new Collection(Storage::allFiles($this->stubPath()));
 
 	}
 
-	/**
-	* The static counterpart to "exists
-	*
-	* @param void
-	*
-	* @return boolean | whether stub exists/not
-	*
-	* @author Spencer Jones
-	**/
-	public static function has($name = '')
-	{
-	
-		return (new self())->stubs->contains($name);
-
-	}
 
 	/**
 	* Gets a stubbed file
@@ -65,11 +51,9 @@ class Stub
 
 		$stub->setStubName($name);
 
-		$safeName = $stub->getStubName();
+		if ($stub->exists($stub->getStubName())) {
 
-		if ($stub->exists($safeName)) {
-
-			$stub->setStubText($stub->getRawStub($safeName)); 
+			$stub->setStubText($stub->getRawStub($stub->getStubName())); 
 
 			// If the options array 
 			if (!empty($options)) {
@@ -87,9 +71,9 @@ class Stub
 	}
 
 	/**
-	* The o
+	* Whether or not a sub exists
 	*
-	* @param stirng | name of stub
+	* @param string | name of stub
 	*
 	* @return boolean | whether or not stub exists or not
 	*
@@ -97,7 +81,27 @@ class Stub
 	**/
 	public function exists($name = '') {
 	
-		return $this->stubs->contains($name);
+		return $this->stubs->contains(function($value, $key) use ($name){
+			return $name === $value->getFileName();
+		});
+
+	}
+
+	/**
+	* The static counterpart to "exists
+	*
+	* @param void
+	*
+	* @return boolean | whether stub exists/not
+	*
+	* @author Spencer Jones
+	**/
+	public static function has($name = '')
+	{
+	
+		return (new self())->stubs->contains(function($value, $key) use ($name){
+			return $name === $value->getFileName();
+		});
 
 	}
 
@@ -351,6 +355,28 @@ class Stub
 		return $this->stubText;
 
 	}
+
+	/**
+	* Sets the current stub name
+	*
+	* @param void
+	*
+	* @return string | name of current stub
+	*
+	* @author Spencer Jones
+	**/
+	public static function fileName($name = '')
+	{
+
+		// Convert to studly case
+		$name = Str::studly($name);
+
+		// Check for PHP extension
+		$name = (!Str::endsWith($name, '.php')) ? $name . '.php' : $name;
+
+		return $name;
+
+	}
 	
 
 	/**
@@ -370,6 +396,9 @@ class Stub
 
 		// Check for PHP extension
 		$name = (!Str::endsWith($name, '.php')) ? $name . '.php' : $name;
+
+		// Check for Stub
+		$name = (!Str::endsWith($name, 'Stub.php')) ? preg_replace('/\.php/', 'Stub.php', $name) : $name;
 
 		return $name;
 

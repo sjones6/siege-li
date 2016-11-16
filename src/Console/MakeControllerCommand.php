@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
 
 // Siege
+use SiegeLi\Helpers\File;
 use SiegeLi\Helpers\Stub;
 use SiegeLi\Console\SiegeCommand as Command;
 
@@ -57,11 +58,11 @@ class MakeControllerCommand extends Command
         $this->setResource($this->argument('resource'));
 
         // Get the path and contents.
-        $path = app_path() . '/Http/Controllers/' . Stub::stubName($this->resource() . 'Controller');
+        $path = app_path() . '/Http/Controllers/' . Stub::fileName($this->resource() . 'Controller');
         $model = Stub::get('controller')->make($this->getOptions());
 
         // Make the file
-        file_put_contents($path, $model);
+        File::put($path, $model);
 
         if ($this->shouldMakeRoute()) {
             $this->makeResourcefulRoute();
@@ -95,7 +96,8 @@ class MakeControllerCommand extends Command
     *
     * @author Spencer Jones
     **/
-    protected function makeResourcefulRoute() {
+    protected function makeResourcefulRoute()
+    {
     
         $slug = Str::slug($this->resource());
         $resource = Str::studly($this->resource());
@@ -116,10 +118,7 @@ Route::resource('${slug}', '${resource}Controller'${resources});
         ";
 
         // Add new route to end of current routes/web.php
-        $newContent = file_get_contents($path) . $route;
-
-        // Make the file
-        file_put_contents($path, $newContent);
+        File::append($path, $route);
 
     }
         

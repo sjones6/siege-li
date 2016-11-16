@@ -8,6 +8,7 @@ use Illuminate\Support\Collection;
 
 // Siege
 use SiegeLi\Helpers\Stub;
+use SiegeLi\Helpers\File;
 use SiegeLi\Console\SiegeCommand as Command;
 
 class MakeModelCommand extends Command
@@ -48,11 +49,11 @@ class MakeModelCommand extends Command
     {
 
         // Get the path and contents.
-        $path = app_path() . '/' . Stub::stubName($this->argument('model'));
+        $path = app_path() . '/' . Stub::fileName($this->argument('model'));
         $model = Stub::get('model')->make($this->getOptions());
 
         // Make the file
-        file_put_contents($path, $model);
+        File::put($path, $model);
 
         $this->info('Model made.');
     }

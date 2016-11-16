@@ -17,14 +17,15 @@ class MvcCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'siege:mvc {resource}';
+    protected $signature = 'siege:mvc {resource}
+                            {--o|options= : Comma delimited list of stub options to include}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Makes model, view, controller, routes for resource';
+    protected $description = 'Makes model, views, controller, routes for resource';
 
     /**
      * Create a new command instance.
@@ -43,16 +44,18 @@ class MvcCommand extends Command
      */
     public function handle()
     {
+
         // Make controller
         $this->call('siege:c', [
             'resource' => $this->resource(),
-            '-a',
+            '--options' => $this->option('options'),
+            '--route' => true,
         ]);
 
         // Make the model
         $this->call('siege:m', [
             'model' => $this->resource(),
-            '-a',
+            '--options' => $this->option('options'),
         ]);
 
     }
