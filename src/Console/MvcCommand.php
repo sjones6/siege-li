@@ -58,6 +58,24 @@ class MvcCommand extends Command
             '--options' => $this->option('options'),
         ]);
 
+        // Make the views
+        $views = new Collection(['index', 'edit', 'create', 'show']);
+        $options = explode(',', $this->option('options'));
+
+        if (!empty($views)) {
+           $views = $views->filter(function($view) use ($options){
+                return in_array($view, $options);
+           }); 
+        }
+
+        $views->each(function($view){
+            $this->call('siege:v', [
+                'resource' => $this->resource(),
+                'view' => $view,
+                '--options' => $this->option('options'),
+            ]);
+        });
+
     }
 
     /**
