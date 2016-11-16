@@ -29,7 +29,7 @@ class {{name}} extends Controller
 	
 		${{model_camel}}s =  {{model}}::paginate(25);
 
-		return view('{{slug}}.index', ['{{model_camel}}' => ${{model_camel}}s]);
+		return view('{{slug}}.index', ['{{model_camel}}s' => ${{model_camel}}s]);
 
 	}
 >>>
