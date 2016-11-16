@@ -7,6 +7,12 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File as Storage;
 
+// Packages
+use Symfony\Component\Finder\SplFileInfo;
+
+// Siege
+use SiegeLi\Helpers\File;
+
 class Stub
 {
 
@@ -22,9 +28,14 @@ class Stub
 	protected $stubText;
 
 	/**
-	* @var type | desc
+	* @var object | Illuminate\Support\Collection
 	**/
 	protected $stubs;
+
+	/**
+	* @var object | Symfony\Component\Finder\SplFileInfo
+	**/
+	protected $stub;
 
 	public function __construct()
 	{
@@ -32,7 +43,6 @@ class Stub
 		$this->stubs = new Collection(Storage::allFiles($this->stubPath()));
 
 	}
-
 
 	/**
 	* Gets a stubbed file
@@ -53,7 +63,7 @@ class Stub
 
 		if ($stub->exists($stub->getStubName())) {
 
-			$stub->setStubText($stub->getRawStub($stub->getStubName())); 
+			$stub->findAndSetStubTemplate($stub->getStubName());
 
 			// If the options array 
 			if (!empty($options)) {
@@ -102,6 +112,44 @@ class Stub
 		return (new self())->stubs->contains(function($value, $key) use ($name){
 			return $name === $value->getFileName();
 		});
+
+	}
+
+	/**
+	* Whether or not a sub exists
+	*
+	* @param string | name of stub to find
+	*
+	* @return void
+	*
+	* @author Spencer Jones
+	**/
+	public function findAndSetStubTemplate($name = '')
+	{
+
+		$this->stubs->search(function($item) use ($name) {
+			if ($name === $item->getFileName()) {
+				$this->setStub($item);
+			}
+		});
+
+		$this->setStubText($this->getRawStub()); 
+	}
+
+
+	/**
+	* Sets stub var
+	*
+	* @param object | Symfony\Component\Finder\SplFileInfo
+	*
+	* @return void
+	*
+	* @author Spencer Jones
+	**/
+	protected function setStub(SplFileInfo $stub)
+	{
+
+		$this->stub = $stub;
 
 	}
 
@@ -161,7 +209,7 @@ class Stub
 
 	/**
 	* Makes any final cleanup
-	* before return stub text
+	* before returning stub text
 	*
 	* @param void
 	*
@@ -187,7 +235,6 @@ class Stub
 	
 	}
 		
-
 	/**
 	* Get all available stubs
 	*
@@ -244,10 +291,10 @@ class Stub
 	*
 	* @author Spencer Jones
 	**/
-	protected function getRawStub($name = '')
+	protected function getRawStub()
 	{
 	
-		return file_get_contents($this->stubPath() . $name);
+		return File::get($this->stub->getPathName());
 
 	}
 
@@ -377,6 +424,47 @@ class Stub
 		return $name;
 
 	}
+
+
+	/**
+	* Sets the current stub name
+	*
+	* @param void
+	*
+	* @return string | name of current stub
+	*
+	* @author Spencer Jones
+	**/
+	public static function bladeFileName($name = '')
+	{
+
+		// Convert to slug case
+		$name = Str::slug($name);
+
+		// Check for PHP extension
+		$name = (!Str::endsWith($name, '.blade.php')) ? $name . '.blade.php' : $name;
+
+		return $name;
+
+	}
+
+
+	/**
+	* Sets the current stub name
+	*
+	* @param void
+	*
+	* @return string | name of current stub
+	*
+	* @author Spencer Jones
+	**/
+	public static function dirName($name = '')
+	{
+
+		// Convert to slug case
+		return Str::slug($name) . '/';
+
+	}
 	
 
 	/**
@@ -450,6 +538,12 @@ class Stub
 	**/
 	protected function stubPath()
 	{
+
+		// If the package has been published
+		// use custom stubs
+		if (Storage::exists(resource_path('stubs'))) {
+			return resource_path('stubs');
+		}
 	
 		return __DIR__ . '/../Stubs/';
 
