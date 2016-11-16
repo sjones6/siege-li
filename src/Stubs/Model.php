@@ -18,7 +18,7 @@ class {{model}} extends Model
   /**
   * @var string | table name
   **/
-  protected $table = "{{table}}";
+  protected $table = '{{table}}s';
 
   /**
   * @var string | guarded attributes
@@ -28,6 +28,6 @@ class {{model}} extends Model
   /**
   * @var string | column name of primary key attribute
   **/
-  protected $primaryKey = "{{primary_key}}";
+  protected $primaryKey = '{{primary_key}}';
 
 }

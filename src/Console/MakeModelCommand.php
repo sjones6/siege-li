@@ -4,6 +4,7 @@ namespace SiegeLi\Console;
 
 // Laravel
 use Illuminate\Support\Str;
+use Illuminate\Support\Collection;
 
 // Siege
 use SiegeLi\Helpers\Stub;
@@ -17,7 +18,9 @@ class MakeModelCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'siege:m {model}';
+    protected $signature = 'siege:m {model}
+                            {--a|all : Include all optional blocks}
+                            {--o|options= : Comma delimited list of stub options to include}';
 
     /**
      * The console command description.
@@ -66,13 +69,24 @@ class MakeModelCommand extends Command
     **/
     protected function getOptions() {
 
+
+        $flags = !empty($this->option('options')) ? explode(',', $this->option('options')) : [];
+
         return [
-            'namespace' => preg_replace('/\\\\/', '', Str::studly($this->appNamespace())),
-            'model' => Str::studly($this->argument('model')),
-            'table' => Str::snake($this->argument('model')),
-            'primary_key' => Str::snake($this->argument('model')) . '_id',
+            'vars' => new Collection([
+                'namespace' => preg_replace('/\\\\/', '', Str::studly($this->appNamespace())),
+                'model' => Str::studly($this->argument('model')),
+                'model_camel' => Str::camel($this->argument('model')),
+                'name' => Str::studly($this->argument('model')) . 'Controller',
+                'slug' => Str::slug($this->argument('model')),
+                'table' => Str::snake($this->argument('model')),
+                'primary_key' => Str::snake($this->argument('model')) . '_id',
+            ]),
+            'flags' => new Collection($flags),
+            'all' => (empty($flags) || $this->option('all')) ? true : false,
         ];
-    
+
+
     }
         
 
