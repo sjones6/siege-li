@@ -9,6 +9,8 @@ use Illuminate\Support\Collection;
 // Siege
 use SiegeLi\Helpers\Stub;
 use SiegeLi\Helpers\File;
+use SiegeLi\Helpers\Path;
+use SiegeLi\Helpers\Group;
 use SiegeLi\Console\SiegeCommand as Command;
 
 class MakeModelCommand extends Command
@@ -21,6 +23,10 @@ class MakeModelCommand extends Command
      */
     protected $signature = 'siege:m {model}
                             {--a|all : Include all optional blocks}
+                            {--g|group= : Which stub group to use}
+                            {--m|migration : Make a migration}
+                            {--s|seeder : Make a seeder}
+                            {--f|factory : Make a factory}
                             {--o|options= : Comma delimited list of stub options to include}';
 
     /**
@@ -49,11 +55,24 @@ class MakeModelCommand extends Command
     {
 
         // Get the path and contents.
-        $path = app_path() . '/' . Stub::fileName($this->argument('model'));
+        $path = Path::make(Stub::fileName($this->argument('model')), 'model');
         $model = Stub::get('model')->make($this->getOptions());
 
         // Make the file
         File::put($path, $model);
+
+        // Migration
+        if ($this->shouldMakeMigration()) {
+            $this->makeMigration();
+        }
+
+        if ($this->shouldMakeSeeder()) {
+            $this->makeSeeder();
+        }
+
+        if ($this->shouldMakeFactory()) {
+            $this->makeFactory();
+        }
 
         $this->info('Model made.');
     }
@@ -87,8 +106,122 @@ class MakeModelCommand extends Command
             'all' => (empty($flags) || $this->option('all')) ? true : false,
         ];
 
+    }
+
+
+    /**
+    * Check if a migration should be made
+    *
+    * @param void
+    *
+    * @return boolean | should / shouldnt
+    *
+    * @author Spencer Jones
+    **/
+    protected function shouldMakeMigration() {
+    
+        return ($this->option('all') || $this->option('migration')) ? true : false;
 
     }
+
+    /**
+    * Check if a seeder should be made
+    *
+    * @param void
+    *
+    * @return boolean | should / shouldnt
+    *
+    * @author Spencer Jones
+    **/
+    protected function shouldMakeSeeder() {
+    
+        return ($this->option('all') || $this->option('seeder')) ? true : false;
+
+    }
+
+    /**
+    * Check if a factory should be made
+    *
+    * @param void
+    *
+    * @return boolean | should / shouldnt
+    *
+    * @author Spencer Jones
+    **/
+    protected function shouldMakeFactory() {
+    
+        return ($this->option('all') || $this->option('factory')) ? true : false;
+
+    }
+
+    /**
+    * Make a migration
+    *
+    * @param void
+    *
+    * @return void
+    *
+    * @author Spencer Jones
+    **/
+    protected function makeMigration() {
+    
+        // Get the path and contents.
+        $path = database_path() . '/migrations/' . Stub::fileName($this->argument('model'));
+        $model = Stub::get('migration')->make($this->getOptions());
+
+        // Make the file
+        File::put($path, $model);
+    
+    }
+
+
+    /**
+    * Make a seeder
+    *
+    * @param void
+    *
+    * @return void
+    *
+    * @author Spencer Jones
+    **/
+    protected function makeSeeder() {
+    
+        // Get the path and contents.
+        $path = database_path() . '/seeds/' . Stub::fileName($this->argument('model'));
+        $seeder = Stub::get('seeder')->make($this->getOptions());
+
+        // Make the file
+        File::put($path, $seeder);    
+
+    }
+
+    /**
+    * Make a factory
+    *
+    * @param void
+    *
+    * @return void
+    *
+    * @author Spencer Jones
+    **/
+    protected function makeFactory() {
+
+        $qualifiedModel = preg_replace('/\\\\/', '', Str::studly($this->appNamespace())) . '\\' . Str::studly($this->argument('model'));
+    
+        $factory = "
+\$factory->define(${qualifiedModel}::class, function (Faker\Generator \$faker) {
+    return [
+        //
+    ];
+});";
+
+        $path = database_path() . '/factories/ModelFactory.php';
+
+        // Make the file
+        File::append($path, $factory);    
+    
+    }
+        
         
 
 }

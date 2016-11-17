@@ -10,8 +10,9 @@ use SiegeLi\Console\MakeModelCommand;
 use SiegeLi\Console\MakeControllerCommand;
 use SiegeLi\Console\MakeViewsCommand;
 use SiegeLi\Console\MvcCommand;
+use SiegeLi\Console\GroupCommand;
 
-class SiegeLiProvider extends ServiceProvider
+class SiegeLiServiceProvider extends ServiceProvider
 {
 
     /**
@@ -29,12 +30,14 @@ class SiegeLiProvider extends ServiceProvider
                 MakeControllerCommand::class,
                 MvcCommand::class,
                 MakeViewsCommand::class,
+                GroupCommand::class,
             ]);
         }
 
-        // Publish Stubs
+        // Publish stubs, config
         $this->publishes([
-            __DIR__.'/Stubs' => resource_path('stubs'),
+            __DIR__.'/Stubs' => resource_path('stubs/base/'),
+            __DIR__.'/config.php' => config_path('stubs.php')
         ], 'public');
 
     }

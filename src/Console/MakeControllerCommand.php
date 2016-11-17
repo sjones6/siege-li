@@ -8,8 +8,10 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
 
 // Siege
-use SiegeLi\Helpers\File;
 use SiegeLi\Helpers\Stub;
+use SiegeLi\Helpers\File;
+use SiegeLi\Helpers\Path;
+use SiegeLi\Helpers\Group;
 use SiegeLi\Console\SiegeCommand as Command;
 
 class MakeControllerCommand extends Command
@@ -22,6 +24,7 @@ class MakeControllerCommand extends Command
     protected $signature = 'siege:c {resource}
                             {--r|route : Make resourceful route}
                             {--a|all : Include all optional blocks}
+                            {--g|group= : Which stub group to use}
                             {--o|options= : Comma delimited list of stub options to include}';
 
     /**
@@ -58,7 +61,7 @@ class MakeControllerCommand extends Command
         $this->setResource($this->argument('resource'));
 
         // Get the path and contents.
-        $path = app_path() . '/Http/Controllers/' . Stub::fileName($this->resource() . 'Controller');
+        $path = Path::make(Stub::fileName($this->resource() . 'Controller'), 'controller');
         $model = Stub::get('controller')->make($this->getOptions());
 
         // Make the file
@@ -111,7 +114,7 @@ class MakeControllerCommand extends Command
         }
 
         // Get the path and contents.
-        $path = base_path() . '/routes/web.php';
+        $path = Path::make('web.php', 'route');
         $route = "
 
 Route::resource('${slug}', '${resource}Controller'${resources});

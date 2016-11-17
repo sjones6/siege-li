@@ -7,6 +7,9 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
 
 // Siege
+use SiegeLi\Helpers\File;
+use SiegeLi\Helpers\Path;
+use SiegeLi\Helpers\Group;
 use SiegeLi\Console\SiegeCommand as Command;
 
 
@@ -18,6 +21,7 @@ class MvcCommand extends Command
      * @var string
      */
     protected $signature = 'siege:mvc {resource}
+                            {--g|group= : Which stub group to use}
                             {--o|options= : Comma delimited list of stub options to include}';
 
     /**

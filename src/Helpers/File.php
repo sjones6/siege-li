@@ -62,4 +62,26 @@ class File
 
 	}
 
+	public static function copy($origin, $destination)
+	{
+
+		if (self::alreadyExists($destination)) {
+			throw new \Exception('Cannot copy files to ' . $destination . '. Destination already exists');
+		}
+
+		Storage::copy($origin, $destination);
+
+	}
+
+	public static function copyDir($origin, $destination)
+	{
+
+		if (self::alreadyExists($destination)) {
+			throw new \Exception('Cannot copy files to ' . $destination . '. Destination already exists');
+		}
+
+		Storage::copyDirectory($origin, $destination);
+
+	}
+
 }

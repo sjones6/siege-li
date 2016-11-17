@@ -9,6 +9,8 @@ use Illuminate\Support\Collection;
 // Siege
 use SiegeLi\Helpers\Stub;
 use SiegeLi\Helpers\File;
+use SiegeLi\Helpers\Path;
+use SiegeLi\Helpers\Group;
 use SiegeLi\Console\SiegeCommand as Command;
 
 
@@ -21,6 +23,7 @@ class MakeViewsCommand extends Command
      */
     protected $signature = 'siege:v {resource} {view}
                             {--a|all : Include all optional blocks}
+                            {--g|group= : Which stub group to use}
                             {--o|options= : Comma delimited list of stub options to include}';
 
     /**
@@ -49,7 +52,8 @@ class MakeViewsCommand extends Command
     {
 
         // Get the path and contents.
-        $path = resource_path() . '/views/' . Stub::dirName($this->argument('resource')) . Stub::bladeFileName($this->argument('view'));
+        $dirAndFile = Stub::dirName($this->argument('resource')) . Stub::bladeFileName($this->argument('view'));
+        $path = Path::make($dirAndFile, 'view');
         $model = Stub::get($this->argument('view'))->make($this->getOptions());
 
         // Make the file

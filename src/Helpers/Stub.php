@@ -2,6 +2,8 @@
 
 namespace SiegeLi\Helpers;
 
+use Illuminate\Support\Facades\Config;
+
 // Laravel
 use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
@@ -11,6 +13,8 @@ use Illuminate\Support\Facades\File as Storage;
 use Symfony\Component\Finder\SplFileInfo;
 
 // Siege
+use SiegeLi\Helpers\Group;
+use SiegeLi\Helpers\Path;
 use SiegeLi\Helpers\File;
 
 class Stub
@@ -33,12 +37,22 @@ class Stub
 	protected $stubs;
 
 	/**
+	* @var string | group
+	**/
+	protected $groupName;
+
+	/**
 	* @var object | Symfony\Component\Finder\SplFileInfo
 	**/
 	protected $stub;
 
-	public function __construct()
+	/**
+	* @param string | $group name
+	**/
+	public function __construct($group = '')
 	{
+
+		$this->groupName = (empty($group)) ? Group::defaultGroup() : $group;
 
 		$this->stubs = new Collection(Storage::allFiles($this->stubPath()));
 
@@ -48,16 +62,17 @@ class Stub
 	* Gets a stubbed file
 	*
 	* @param string | $name of stub to get
-	* @param 
+	* @param string | group name
+	* @param array | options to make immediately
 	*
 	* @return string
 	*
 	* @author Spencer Jones
 	**/
-	public static function get($name = '', array $options = [])
+	public static function get($name = '', $group = '', array $options = [])
 	{
 	
-		$stub = new self();
+		$stub = new self($group);
 
 		$stub->setStubName($name);
 
@@ -540,9 +555,9 @@ class Stub
 	{
 
 		// If the package has been published
-		// use custom stubs
-		if (Storage::exists(resource_path('stubs'))) {
-			return resource_path('stubs');
+		// use custom, grouped stubs
+		if (Storage::exists(Group::path($this->groupName))) {
+			return Group::path($this->groupName);
 		}
 	
 		return __DIR__ . '/../Stubs/';
