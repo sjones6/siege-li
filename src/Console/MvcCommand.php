@@ -22,6 +22,7 @@ class MvcCommand extends Command
      */
     protected $signature = 'siege:mvc {resource}
                             {--g|group= : Which stub group to use}
+                            {--i|include= : Comma delimited list of views to include; index,show,edit,create by default}
                             {--o|options= : Comma delimited list of stub options to include}';
 
     /**
@@ -52,6 +53,7 @@ class MvcCommand extends Command
         // Make controller
         $this->call('siege:c', [
             'resource' => $this->resource(),
+            '--group' => $this->group(),
             '--options' => $this->option('options'),
             '--route' => true,
         ]);
@@ -59,35 +61,23 @@ class MvcCommand extends Command
         // Make the model
         $this->call('siege:m', [
             'model' => $this->resource(),
+            '--group' => $this->group(),
+            '--migration' => true,
+            '--seeder' => true,
+            '--factory' => true,
             '--options' => $this->option('options'),
         ]);
 
-        // Make the views
-        $views = new Collection(['index', 'edit', 'create', 'show']);
-        $options = explode(',', $this->option('options'));
-
-        if (!empty($views)) {
-           $views = $views->filter(function($view) use ($options){
-                return in_array($view, $options);
-           }); 
-        }
-
-        $views->each(function($view){
-            $this->call('siege:v', [
-                'resource' => $this->resource(),
-                'view' => $view,
-                '--options' => $this->option('options'),
-            ]);
-        });
+        $this->makeViews();
 
     }
 
     /**
-    * Description
+    * Gets the resource parameter
     *
-    * @param
+    * @param void
     *
-    * @return
+    * @return string | resource name
     *
     * @author Spencer Jones
     **/
@@ -96,5 +86,52 @@ class MvcCommand extends Command
         return $this->argument('resource');
 
     }
+
+
+    /**
+    * Makes all views
+    *
+    * @param void
+    *
+    * @return void
+    *
+    * @author Spencer Jones
+    **/
+    protected function makeViews() {
+
+        $this->getViewOptions()->each(function($view) {
+
+            $this->call('siege:v', [
+                'resource' => $this->argument('resource'),
+                'view' => $view,
+                '--group' => $this->group(),
+                '--options' => (!empty($this->option('options')) ? $this->option('options') : ''),
+            ]);
+
+        });
+    
+    }
+
+    /**
+    * Gets the options specified by -i flag
+    * If no option given, returns resourceful views
+    *
+    * @param void
+    *
+    * @return object | Illuminate\Support\Collection
+    *
+    * @author Spencer Jones
+    **/
+    protected function getViewOptions() {
+    
+        // Make the views
+        $views = new Collection(['index', 'edit', 'create', 'show']);
+        $options = (!empty($this->option('include'))) ? new Collection(explode(',', $this->option('include'))) : new Collection([]);
+
+        return ($options->isEmpty()) ? $views : $options;
+    
+    }
+        
+        
         
 }

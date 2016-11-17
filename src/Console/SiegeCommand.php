@@ -51,7 +51,7 @@ class SiegeCommand extends Command
     }
 
     /**
-    * Description
+    * Get the application namespace
     *
     * @param void
     *
@@ -64,6 +64,22 @@ class SiegeCommand extends Command
         return $this->getAppNamespace();
 
     }
+
+    /**
+    * Get the group option
+    * 
+    * @param void
+    *
+    * @return string
+    *
+    * @author Spencer Jones
+    **/
+    protected function group() {
+    
+        return (!empty($this->option('group'))) ? $this->option('group'): '';
+
+    }
+        
         
         
 

@@ -56,7 +56,7 @@ class MakeModelCommand extends Command
 
         // Get the path and contents.
         $path = Path::make(Stub::fileName($this->argument('model')), 'model');
-        $model = Stub::get('model')->make($this->getOptions());
+        $model = Stub::get('model', $this->group())->make($this->getOptions());
 
         // Make the file
         File::put($path, $model);
@@ -167,7 +167,7 @@ class MakeModelCommand extends Command
     
         // Get the path and contents.
         $path = database_path() . '/migrations/' . Stub::fileName($this->argument('model'));
-        $model = Stub::get('migration')->make($this->getOptions());
+        $model = Stub::get('migration', $this->group())->make($this->getOptions());
 
         // Make the file
         File::put($path, $model);
@@ -188,7 +188,7 @@ class MakeModelCommand extends Command
     
         // Get the path and contents.
         $path = database_path() . '/seeds/' . Stub::fileName($this->argument('model'));
-        $seeder = Stub::get('seeder')->make($this->getOptions());
+        $seeder = Stub::get('seeder', $this->group())->make($this->getOptions());
 
         // Make the file
         File::put($path, $seeder);    

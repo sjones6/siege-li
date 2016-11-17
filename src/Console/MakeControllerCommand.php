@@ -62,7 +62,7 @@ class MakeControllerCommand extends Command
 
         // Get the path and contents.
         $path = Path::make(Stub::fileName($this->resource() . 'Controller'), 'controller');
-        $model = Stub::get('controller')->make($this->getOptions());
+        $model = Stub::get('controller', $this->group())->make($this->getOptions());
 
         // Make the file
         File::put($path, $model);

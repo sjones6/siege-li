@@ -54,7 +54,7 @@ class MakeViewsCommand extends Command
         // Get the path and contents.
         $dirAndFile = Stub::dirName($this->argument('resource')) . Stub::bladeFileName($this->argument('view'));
         $path = Path::make($dirAndFile, 'view');
-        $model = Stub::get($this->argument('view'))->make($this->getOptions());
+        $model = Stub::get($this->argument('view'), $this->group())->make($this->getOptions());
 
         // Make the file
         File::put($path, $model);

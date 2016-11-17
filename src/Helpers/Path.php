@@ -44,7 +44,7 @@ class Path
 	protected static function view()
 	{
 	
-		return array_pop(Config::get('view.paths'));
+		return collect(Config::get('view.paths'))->first();
 
 	}
 		
@@ -60,7 +60,7 @@ class Path
 	**/
 	public static function make($path = '', $resourceType)
 	{
-	
+
 		return self::get($resourceType) . '/' . $path;
 	
 	}

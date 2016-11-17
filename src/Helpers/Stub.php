@@ -91,7 +91,7 @@ class Stub
 
 		}
 
-		throw new \Exception('Stub not found');
+		throw new \Exception('Stub ' . $name . ' not found');
 
 	}
 
