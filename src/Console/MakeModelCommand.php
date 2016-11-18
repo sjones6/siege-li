@@ -7,10 +7,11 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
 
 // Siege
-use SiegeLi\Helpers\Stub;
 use SiegeLi\Helpers\File;
 use SiegeLi\Helpers\Path;
+use SiegeLi\Helpers\Name;
 use SiegeLi\Helpers\Group;
+use SiegeLi\Templating\Stub;
 use SiegeLi\Console\SiegeCommand as Command;
 
 class MakeModelCommand extends Command
@@ -55,7 +56,7 @@ class MakeModelCommand extends Command
     {
 
         // Get the path and contents.
-        $path = Path::make(Stub::fileName($this->argument('model')), 'model');
+        $path = Path::make(Name::file($this->argument('model')), 'model');
         $model = Stub::get('model', $this->group())->make($this->getOptions());
 
         // Make the file
@@ -87,19 +88,20 @@ class MakeModelCommand extends Command
     *
     * @author Spencer Jones
     **/
-    protected function getOptions() {
+    protected function getOptions()
+    {
 
 
         $flags = !empty($this->option('options')) ? explode(',', $this->option('options')) : [];
 
         return [
             'vars' => new Collection([
-                'namespace' => preg_replace('/\\\\/', '', Str::studly($this->appNamespace())),
+                'namespace' => Name::space(),
                 'model' => Str::studly($this->argument('model')),
                 'model_camel' => Str::camel($this->argument('model')),
                 'name' => Str::studly($this->argument('model')) . 'Controller',
                 'slug' => Str::slug($this->argument('model')),
-                'table' => Str::snake($this->argument('model')),
+                'table' => Str::plural($this->argument('model')),
                 'primary_key' => Str::snake($this->argument('model')) . '_id',
             ]),
             'flags' => new Collection($flags),
@@ -118,7 +120,8 @@ class MakeModelCommand extends Command
     *
     * @author Spencer Jones
     **/
-    protected function shouldMakeMigration() {
+    protected function shouldMakeMigration()
+    {
     
         return ($this->option('all') || $this->option('migration')) ? true : false;
 
@@ -133,7 +136,8 @@ class MakeModelCommand extends Command
     *
     * @author Spencer Jones
     **/
-    protected function shouldMakeSeeder() {
+    protected function shouldMakeSeeder()
+    {
     
         return ($this->option('all') || $this->option('seeder')) ? true : false;
 
@@ -148,7 +152,8 @@ class MakeModelCommand extends Command
     *
     * @author Spencer Jones
     **/
-    protected function shouldMakeFactory() {
+    protected function shouldMakeFactory()
+    {
     
         return ($this->option('all') || $this->option('factory')) ? true : false;
 
@@ -163,10 +168,11 @@ class MakeModelCommand extends Command
     *
     * @author Spencer Jones
     **/
-    protected function makeMigration() {
+    protected function makeMigration()
+    {
     
         // Get the path and contents.
-        $path = database_path() . '/migrations/' . Stub::fileName($this->argument('model'));
+        $path = Path::file(Name::migration($this->argument('model')), 'migration');
         $model = Stub::get('migration', $this->group())->make($this->getOptions());
 
         // Make the file
@@ -184,10 +190,11 @@ class MakeModelCommand extends Command
     *
     * @author Spencer Jones
     **/
-    protected function makeSeeder() {
+    protected function makeSeeder()
+    {
     
         // Get the path and contents.
-        $path = Path::file(Stub::fileName($this->argument('model')), 'seed');
+        $path = Path::file(Name::seed($this->argument('model')), 'seed');
         $seeder = Stub::get('seeder', $this->group())->make($this->getOptions());
 
         // Make the file
@@ -204,9 +211,10 @@ class MakeModelCommand extends Command
     *
     * @author Spencer Jones
     **/
-    protected function makeFactory() {
+    protected function makeFactory()
+    {
 
-        $qualifiedModel = preg_replace('/\\\\/', '', Str::studly($this->appNamespace())) . '\\' . Str::studly($this->argument('model'));
+        $qualifiedModel = preg_replace('/\\\\/', '', Str::studly(Name::space())) . '\\' . Str::studly($this->argument('model'));
     
         $factory = PHP_EOL
         ."\$factory->define(${qualifiedModel}::class, function (Faker\Generator \$faker) {

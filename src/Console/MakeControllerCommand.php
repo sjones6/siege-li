@@ -8,10 +8,11 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
 
 // Siege
-use SiegeLi\Helpers\Stub;
 use SiegeLi\Helpers\File;
 use SiegeLi\Helpers\Path;
+use SiegeLi\Helpers\Name;
 use SiegeLi\Helpers\Group;
+use SiegeLi\Templating\Stub;
 use SiegeLi\Console\SiegeCommand as Command;
 
 class MakeControllerCommand extends Command
@@ -61,7 +62,7 @@ class MakeControllerCommand extends Command
         $this->setResource($this->argument('resource'));
 
         // Get the path and contents.
-        $path = Path::make(Stub::fileName($this->resource() . 'Controller'), 'controller');
+        $path = Path::make(Name::controller($this->resource()), 'controller');
         $model = Stub::get('controller', $this->group())->make($this->getOptions());
 
         // Make the file
@@ -143,7 +144,7 @@ class MakeControllerCommand extends Command
 
         return [
             'vars' => new Collection([
-                'namespace' => preg_replace('/\\\\/', '', Str::studly($this->appNamespace())),
+                'namespace' => Name::space(),
                 'model' => Str::studly($this->resource()),
                 'model_camel' => Str::camel($this->resource()),
                 'name' => Str::studly($this->resource()) . 'Controller',

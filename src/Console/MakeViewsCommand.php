@@ -7,10 +7,11 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Collection;
 
 // Siege
-use SiegeLi\Helpers\Stub;
 use SiegeLi\Helpers\File;
 use SiegeLi\Helpers\Path;
 use SiegeLi\Helpers\Group;
+use SiegeLi\Helpers\Name;
+use SiegeLi\Templating\Stub;
 use SiegeLi\Console\SiegeCommand as Command;
 
 
@@ -52,7 +53,7 @@ class MakeViewsCommand extends Command
     {
 
         // Get the path and contents.
-        $dirAndFile = Stub::dirName($this->argument('resource')) . Stub::bladeFileName($this->argument('view'));
+        $dirAndFile = Name::dir($this->argument('resource')) . Name::blade($this->argument('view'));
         $path = Path::make($dirAndFile, 'view');
         $model = Stub::get($this->argument('view'), $this->group())->make($this->getOptions());
 
