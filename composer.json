@@ -1,6 +1,6 @@
 {
 	"name": "sjones6/siege-li",
-	"description": "A HIHGLY opinionated and personalized Laravel CLI tool",
+	"description": "Customizable Laravel stubs",
 	"type": "library",
 	"require": {
 		"php": ">=5.5.9",
