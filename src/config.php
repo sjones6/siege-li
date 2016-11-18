@@ -32,9 +32,9 @@ return [
         'model' => realpath(base_path('app/')),
     	'controller' => realpath(base_path('app/Http/Controllers')),
     	'migration' => realpath(base_path('database/migrations')),
-        'route' => realpath(base_path('routes/')),
     	'seed' => realpath(base_path('database/seeds')),
-    	'factory' => realpath(base_path('database/factories/ModelFactory.php')),
+    	'routes_file' => realpath(base_path('routes/web.php')),
+        'factory_file' => realpath(base_path('database/factories/ModelFactory.php')),
     ],
 
 

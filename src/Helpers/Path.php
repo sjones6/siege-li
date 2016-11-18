@@ -64,6 +64,40 @@ class Path
 		return self::get($resourceType) . '/' . $path;
 	
 	}
+
+	/**
+	* Makes a path to a file
+	*
+	* @param string | unqualified $path to resource
+	* @param string | resource type to make path for
+	*
+	* @return string | qualified path to resource
+	*
+	* @author Spencer Jones
+	**/
+	public static function file($file = '', $resourceType)
+	{
+
+		return (!empty($file)) ? self::get($resourceType) . '/' . $file : self::get($resourceType);
+	
+	}
+
+	/**
+	* Makes a path to a directory
+	*
+	* @param string | unqualified $path to resource
+	* @param string | resource type to make path for
+	*
+	* @return string | qualified path to resource
+	*
+	* @author Spencer Jones
+	**/
+	public static function dir($path = '', $resourceType)
+	{
+
+		return self::get($resourceType) . '/' . $path;
+	
+	}
 		
 		
 

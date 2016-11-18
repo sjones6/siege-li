@@ -187,7 +187,7 @@ class MakeModelCommand extends Command
     protected function makeSeeder() {
     
         // Get the path and contents.
-        $path = database_path() . '/seeds/' . Stub::fileName($this->argument('model'));
+        $path = Path::file(Stub::fileName($this->argument('model')), 'seed');
         $seeder = Stub::get('seeder', $this->group())->make($this->getOptions());
 
         // Make the file
@@ -208,16 +208,17 @@ class MakeModelCommand extends Command
 
         $qualifiedModel = preg_replace('/\\\\/', '', Str::studly($this->appNamespace())) . '\\' . Str::studly($this->argument('model'));
     
-        $factory = "
-\$factory->define(${qualifiedModel}::class, function (Faker\Generator \$faker) {
+        $factory = PHP_EOL
+        ."\$factory->define(${qualifiedModel}::class, function (Faker\Generator \$faker) {
     return [
         //
     ];
-});";
+});"
+. PHP_EOL;
 
-        $path = database_path() . '/factories/ModelFactory.php';
+        $path = Path::file('', 'factory_file');
 
-        // Make the file
+        // Append factory to factory file
         File::append($path, $factory);    
     
     }

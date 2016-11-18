@@ -114,11 +114,11 @@ class MakeControllerCommand extends Command
         }
 
         // Get the path and contents.
-        $path = Path::make('web.php', 'route');
-        $route = "
+        $path = Path::file('', 'routes_file');
 
-Route::resource('${slug}', '${resource}Controller'${resources});
-        ";
+        $route = PHP_EOL
+        . "Route::resource('${slug}', '${resource}Controller'${resources});"
+        . PHP_EOL;
 
         // Add new route to end of current routes/web.php
         File::append($path, $route);
