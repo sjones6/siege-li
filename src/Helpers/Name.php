@@ -49,6 +49,22 @@ class Name
 	}
 
 	/**
+	* Make a class name
+	*
+	* @param $name | filename
+	*
+	* @return string | qualified class name
+	*
+	* @author Spencer Jones
+	**/
+	public static function className($name, $ending = '')
+	{
+
+		return Str::studly($name) . Str::studly($ending);
+
+	}
+
+	/**
 	* Sets the current model name
 	*
 	* @param $name | filename
