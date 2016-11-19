@@ -2,9 +2,20 @@
 	"name": "sjones6/siege-li",
 	"description": "Customizable Laravel stubs",
 	"type": "library",
+	"keywords": ["stubs","Laravel stubs", "customizable"],
+	"homepage": "https://github.com/sjones6/siege-li",
+	"license": "MIT",
+	"authors": [
+        {
+            "name": "Spencer Jones",
+            "email": "jones.spencera@gmail.com",
+            "homepage": "http://spenceralanjones.com",
+            "role": "Developer"
+        }
+    ],
 	"require": {
 		"php": ">=5.5.9",
-        "laravel/framework": "5.3.*",
+        "laravel/framework": "^5.0",
 		"nesbot/carbon": "^1.21"
 	},
 	"autoload": {
