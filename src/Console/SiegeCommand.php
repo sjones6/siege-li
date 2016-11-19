@@ -3,14 +3,19 @@
 namespace SiegeLi\Console;
 
 // Laravel
+use Illuminate\Support\Str;
 use Illuminate\Console\Command;
-use Illuminate\Console\AppNamespaceDetectorTrait;
+use Illuminate\Support\Collection;
+
+// Siege
+use SiegeLi\Helpers\File;
+use SiegeLi\Helpers\Path;
+use SiegeLi\Helpers\Group;
+use SiegeLi\Helpers\Name;
 
 
 class SiegeCommand extends Command
 {
-
-    use AppNamespaceDetectorTrait;
 
     /**
      * Create a new command instance.
@@ -20,6 +25,7 @@ class SiegeCommand extends Command
     public function __construct()
     {
         parent::__construct();
+
     }
 
     /**
@@ -43,26 +49,23 @@ class SiegeCommand extends Command
     **/
     protected function getOptions() {
 
+        $flags = !empty($this->option('options')) ? explode(',', $this->option('options')) : [];
 
         return [
-            'namespace' => $this->appNamespace(),
+            'vars' => new Collection([
+                'resource' => $this->resource(),
+                'namespace' => Name::space(),
+                'model' => Str::studly($this->resource()),
+                'model_camel' => Str::camel($this->resource()),
+                'class_name' => $this->className(),
+                'slug' => Str::slug($this->resource()),
+                'table' => Str::plural($this->resource()),
+                'primary_key' => Str::snake($this->resource()) . '_id',
+            ]),
+            'flags' => new Collection($flags),
+            'all' => (empty($flags) || $this->option('all')) ? true : false,
         ];
     
-    }
-
-    /**
-    * Get the application namespace
-    *
-    * @param void
-    *
-    * @return string | app namespace
-    *
-    * @author Spencer Jones
-    **/
-    protected function appNamespace() {
-    
-        return $this->getAppNamespace();
-
     }
 
     /**
@@ -79,8 +82,37 @@ class SiegeCommand extends Command
         return (!empty($this->option('group'))) ? $this->option('group'): '';
 
     }
+
+    /**
+    * Get the resource
+    * 
+    * @param void
+    *
+    * @return string | resource name
+    *
+    * @author Spencer Jones
+    **/
+    protected function resource() {
+    
+        return $this->argument('resource');
+
+    }
+
+    /**
+    * Get the class name
+    * should be overwritten in children
+    * 
+    * @param void
+    *
+    * @return string | resource name
+    *
+    * @author Spencer Jones
+    **/
+    protected function className() {
+
+        return Str::studly($this->resource());
         
-        
+    }
         
 
 }

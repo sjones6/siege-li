@@ -22,7 +22,7 @@ class MakeModelCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'siege:m {model}
+    protected $signature = 'siege:m {resource}
                             {--a|all : Include all optional blocks}
                             {--g|group= : Which stub group to use}
                             {--m|migration : Make a migration}
@@ -56,7 +56,7 @@ class MakeModelCommand extends Command
     {
 
         // Get the path and contents.
-        $path = Path::make(Name::file($this->argument('model')), 'model');
+        $path = Path::make(Name::file($this->resource()), 'model');
         $model = Stub::get('model', $this->group())->make($this->getOptions());
 
         // Make the file
@@ -78,36 +78,19 @@ class MakeModelCommand extends Command
         $this->info('Model made.');
     }
 
-
     /**
-    * Assembles all arguments passed by user input
-    *
+    * Get the class name
+    * 
     * @param void
     *
-    * @return array | options
+    * @return string | resource clss name
     *
     * @author Spencer Jones
     **/
-    protected function getOptions()
-    {
+    protected function className() {
 
-
-        $flags = !empty($this->option('options')) ? explode(',', $this->option('options')) : [];
-
-        return [
-            'vars' => new Collection([
-                'namespace' => Name::space(),
-                'model' => Str::studly($this->argument('model')),
-                'model_camel' => Str::camel($this->argument('model')),
-                'name' => Str::studly($this->argument('model')) . 'Controller',
-                'slug' => Str::slug($this->argument('model')),
-                'table' => Str::plural($this->argument('model')),
-                'primary_key' => Str::snake($this->argument('model')) . '_id',
-            ]),
-            'flags' => new Collection($flags),
-            'all' => (empty($flags) || $this->option('all')) ? true : false,
-        ];
-
+        return Name::className($this->resource());
+        
     }
 
 
@@ -172,7 +155,7 @@ class MakeModelCommand extends Command
     {
     
         // Get the path and contents.
-        $path = Path::file(Name::migration($this->argument('model')), 'migration');
+        $path = Path::file(Name::migration($this->resource()), 'migration');
         $model = Stub::get('migration', $this->group())->make($this->getOptions());
 
         // Make the file
@@ -194,7 +177,7 @@ class MakeModelCommand extends Command
     {
     
         // Get the path and contents.
-        $path = Path::file(Name::seed($this->argument('model')), 'seed');
+        $path = Path::file(Name::seed($this->resource()), 'seed');
         $seeder = Stub::get('seeder', $this->group())->make($this->getOptions());
 
         // Make the file
@@ -214,7 +197,7 @@ class MakeModelCommand extends Command
     protected function makeFactory()
     {
 
-        $qualifiedModel = preg_replace('/\\\\/', '', Str::studly(Name::space())) . '\\' . Str::studly($this->argument('model'));
+        $qualifiedModel = preg_replace('/\\\\/', '', Str::studly(Name::space())) . '\\' . Str::studly($this->resource());
     
         $factory = PHP_EOL
         ."\$factory->define(${qualifiedModel}::class, function (Faker\Generator \$faker) {

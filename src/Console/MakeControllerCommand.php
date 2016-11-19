@@ -68,11 +68,27 @@ class MakeControllerCommand extends Command
         // Make the file
         File::put($path, $model);
 
+        // Add to routes file
         if ($this->shouldMakeRoute()) {
             $this->makeResourcefulRoute();
         }
 
         $this->info('Controller made.');
+    }
+
+    /**
+    * Get the class name
+    * 
+    * @param void
+    *
+    * @return string | resource clss name
+    *
+    * @author Spencer Jones
+    **/
+    protected function className() {
+
+        return Name::className($this->resource(), 'Controller');
+        
     }
 
 
@@ -125,7 +141,6 @@ class MakeControllerCommand extends Command
         File::append($path, $route);
 
     }
-        
         
 
     /**
