@@ -10,6 +10,7 @@ use Illuminate\Support\Collection;
 use SiegeLi\Helpers\File;
 use SiegeLi\Helpers\Path;
 use SiegeLi\Helpers\Group;
+use SiegeLi\Helpers\Name;
 use SiegeLi\Console\SiegeCommand as Command;
 
 
@@ -22,6 +23,7 @@ class MvcCommand extends Command
      */
     protected $signature = 'siege:mvc {resource}
                             {--g|group= : Which stub group to use}
+                            {--nt|no-test : Do not make test}
                             {--i|include= : Comma delimited list of views to include; index,show,edit,create by default}
                             {--o|options= : Comma delimited list of stub options to include}';
 
@@ -60,7 +62,7 @@ class MvcCommand extends Command
 
         // Make the model
         $this->call('siege:m', [
-            'model' => $this->resource(),
+            'resource' => $this->resource(),
             '--group' => $this->group(),
             '--migration' => true,
             '--seeder' => true,
@@ -69,6 +71,16 @@ class MvcCommand extends Command
         ]);
 
         $this->makeViews();
+
+        // Make test
+        if ($this->shouldMakeTest()) {
+            
+            $this->call('siege:t', [
+                'resource' => $this->resource(),
+                '--group' => $this->group(),
+                '--options' => $this->option('options'),
+            ]);
+        }
 
     }
 
@@ -131,7 +143,21 @@ class MvcCommand extends Command
         return ($options->isEmpty()) ? $views : $options;
     
     }
-        
+       
+    /**
+    * Check if a test should be made
+    *
+    * @param void
+    *
+    * @return boolean | should / shouldnt
+    *
+    * @author Spencer Jones
+    **/
+    protected function shouldMakeTest() {
+    
+        return ($this->option('no-test')) ? false : true;
+
+    }
         
         
 }

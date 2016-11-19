@@ -9,6 +9,7 @@ use Illuminate\Support\ServiceProvider;
 use SiegeLi\Console\MakeModelCommand;
 use SiegeLi\Console\MakeControllerCommand;
 use SiegeLi\Console\MakeViewsCommand;
+use SiegeLi\Console\MakeTestCommand;
 use SiegeLi\Console\MvcCommand;
 use SiegeLi\Console\GroupCommand;
 
@@ -31,6 +32,7 @@ class SiegeLiServiceProvider extends ServiceProvider
                 MvcCommand::class,
                 MakeViewsCommand::class,
                 GroupCommand::class,
+                MakeTestCommand::class,
             ]);
         }
 
