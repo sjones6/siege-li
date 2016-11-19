@@ -24,7 +24,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | Unless you've configured Laravel resource locations,
-    | these should work. (View is configured in config/view.php)
+    | these should work. (Path to views is configured in config/view.php)
     |
     */
     'paths' => [
@@ -33,6 +33,7 @@ return [
     	'controller' => realpath(base_path('app/Http/Controllers')),
     	'migration' => realpath(base_path('database/migrations')),
     	'seed' => realpath(base_path('database/seeds')),
+        'test' => realpath(base_path('tests')),
     	'routes_file' => realpath(base_path('routes/web.php')),
         'factory_file' => realpath(base_path('database/factories/ModelFactory.php')),
     ],
