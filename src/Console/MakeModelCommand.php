@@ -23,7 +23,7 @@ class MakeModelCommand extends Command
      * @var string
      */
     protected $signature = 'siege:m {resource}
-                            {--a|all : Include all optional blocks}
+                            {--a|all : Include migration, seeder, factor, and all optional stub blocks}
                             {--g|group= : Which stub group to use}
                             {--m|migration : Make a migration}
                             {--s|seeder : Make a seeder}
