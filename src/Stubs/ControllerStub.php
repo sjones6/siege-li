@@ -13,7 +13,7 @@ use {{namespace}}\Http\Controllers\Controller;
 // Application
 use {{namespace}}\{{model}};
 
-class {{name}} extends Controller
+class {{class_name}} extends Controller
 {
 
 <<<index
