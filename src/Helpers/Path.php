@@ -27,6 +27,10 @@ class Path
 			return self::view();
 		}
 
+		if (empty(Config::get('stubs.paths.' . $name))) {
+			throw new \Exception('Path not found. Ensure that the package has been published.');
+		}
+
 		return Config::get('stubs.paths.' . $name);
 	
 	}
